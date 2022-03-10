@@ -2,27 +2,47 @@ const express = require("express");
 const app = express();
 
 
-app.use(logger);
-app.use(checkPermission)
+ app.use(logger);
+ app.use(checkPermission);
 
 app.get("/books", logger,(req, res)=>{
     return res.send({ route: "/books"})
 } );
-app.get("/librarian", logger,  checkPermission, (req, res)=>{
-    return res.send({ route: "/librarian", permission: true})
+app.get("/libraries", logger,    (req, res)=>{
+    return res.send({ route: "/libraries", permission: true, role: req.role})
 } );
 
-app.get("/author", logger, checkPermission, (req, res)=>{
-    return res.send({ route: "/author", permission: true})
+app.get("/authors", logger,   (req, res)=>{
+    return res.send({ route: "/authors", permission: true, role: req.role})
 } );
+
+
+
 
 function logger(req, res, next){
+
+    if(req.path === "/libraries"){
+        req.role = "permission: true";
+    }else if(req.path === "/authors" ){
+        req.role = "permission: true";
+
+    }
+
     console.log("log request path");
     next();
 }
-function checkPermission(req, res, next){
-    console.log("permission");
-    next();
+function checkPermission(role){
+    return 
+    function logger(req, res, next){
+
+        if(role === "librarian"){
+            return next();
+        }
+        else if(role === "author"){
+            return next();
+        }
+        return res.send("Barred")
+    }
 }
 
 app.listen(4004, () =>{
