@@ -1,10 +1,10 @@
-const { application } = require("express");
+
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 
 
-app.user(express.json());
+//app.user(express.json());
 
 
 const connect =() =>{
@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema(
     age:{type: Number, required: true},
     email:{type: String, required: true},
     addres:{type: String, required: true},
-    gender:{type: String, default:female, required: false},
-    type:{type: String, default:customer, required: false}
+    gender:{type: String, required: false},
+    type:{type: String, required: false}
     },
     {
         versionKey: false,
@@ -89,7 +89,7 @@ const FixedAccountSchema = new mongoose.Schema(
     { account_number:{type: Number, required: true},
    
     balance:{type: Number, required: true},
-    interestRate:{type: number, required: true},
+    interestRate:{type: Number, required: true},
    startDate:{type: Date, required: true},
    matuatityDate:{type: Date, required: true},
     
@@ -109,7 +109,7 @@ const FixedAccount = mongoose.model("fixedAccount", FixedAccountSchema);
 app.get("/users", async (req,res)=>{
     try{
         const user = await User.find().lean().exec();
-        return res.status(200).send({users: users});
+        return req.status(200).send({users: user});
     }catch(err){
         return res.status(500).send({messege: "something wrong"})
     }
@@ -119,7 +119,7 @@ app.get("/users", async (req,res)=>{
 app.get("/masterAccount", async (req,res)=>{
     try{
         const masterAccount = await MasterAccount.find().lean().exec();
-        return res.status(200).send({users: users});
+        return res.status(200).send({masterAccount: masterAccount});
     }catch(err){
         return res.status(500).send({messege: "something wrong"})
     }
